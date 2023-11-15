@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY counter_service.py /app/
+COPY counter-service.py /app/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install Flask
