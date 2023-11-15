@@ -10,7 +10,8 @@ pipeline {
             steps {
                 echo 'Building Docker Image...'
                 script {
-                    dockerImage = docker.build("counter-service:\${BRANCH_NAME}", "-f Dockerfile .")
+                    def sanitizedBranchName = BRANCH_NAME.replaceAll("[^a-zA-Z0-9_.-]", "-")
+                    dockerImage = docker.build("counter-service:${sanitizedBranchName}", "-f Dockerfile .")
                 }
             }
         }
