@@ -18,5 +18,5 @@ RUN pip install Flask
 EXPOSE 80
 
 # Define the command to run your application
-CMD ["python", "counter_service.py"]
+CMD ["python", "counter-service.py"]
 
