@@ -48,6 +48,9 @@ pipeline {
                     if (response.contains('Service not ready')) {
                         error("Service is not up and running")
                     }
+                    else {
+                        echo "Service is up and running"
+                    }
                 }
             }
         }
