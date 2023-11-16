@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    parameters {
+    //parameters {
         //BRANCH_NAME is defined in the job as Extended choise parameter
-    }
+    //}
 
     stages {
         stage('Cleanup') {
