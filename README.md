@@ -1,6 +1,19 @@
 # exam repository
+Jenkins URL: https://3.218.247.223/
+User/pass: adminuser/chenbe
+
+
+
+Build the work env using terraform (if you need environment wo work on):
+copy the files , and run:
+terraform init
+terraform plan
+terraform apply -auto-approve
+
+
 JenkinsCreateFile:
 With this file we build the jenkins container , using the following command:
+sudo docker build -t jenkinschen -f JenkinsCreateFile .
 sudo docker run -d --name jenkinsV1 -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home -p 8080:8080 -p 50000:50000 jenkinschen
 
 Nginx:
@@ -45,3 +58,27 @@ EOF
 #replace the {ip} witht the internal IP , for example for : 10.0.1.179
 
 sudo docker run --name docker-nginxchen -p 443:443 -d -v /home/ec2-user/myapp/nginx/conf.d/:/etc/nginx/conf.d/ nginx
+
+
+Web Service:
+Dockerfile - To build the image 
+counter-service.py   - the python script which we nned to run as part of the image
+Jenkinsfile - The file we need to use in the jenkins job , we also need to define the Extended Choice Parameter manually(Groovy Script):
+def getBranches() {
+    def stdout = new ByteArrayOutputStream()
+    def stderr = new ByteArrayOutputStream()
+    def cmd = "git ls-remote --heads git@github.com:chenbe/exam.git"
+    def proc = cmd.execute()
+    proc.consumeProcessOutput(stdout, stderr)
+    proc.waitForOrKill(10000) // wait max 10 seconds
+    if(proc.exitValue() != 0) {
+        return ["Error: ${stderr.toString().trim()}"]
+    }
+    return stdout.toString().trim().split("\n").collect { it.split()[1].replaceAll('refs/heads/', '') }
+}
+return getBranches()
+
+
+Action Items for improvments:
+* Change the BRANCH_NAME instead of Extended Choice Parameter to run in a better way (security issue)
+* EXTERNAL_IP - Add the option to work with localhost , than we can delete the parameter
