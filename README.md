@@ -2,6 +2,9 @@
 Jenkins URL: https://3.218.247.223/
 User/pass: adminuser/chenbe
 
+Web Service:
+Check the counter: curl http://localhost
+Update the counter: curl -X POST http://localhost
 
 
 Build the work env using terraform (if you need environment wo work on):
