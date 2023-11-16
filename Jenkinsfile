@@ -1,9 +1,10 @@
 pipeline {
     agent any
 
-    //parameters {
+    parameters {
         //BRANCH_NAME is defined in the job as Extended choise parameter
-    //}
+        string(name: 'EXTERNAL_IP', defaultValue: '3.218.247.223', description: 'The public IP to check that the web service is working') 
+    }
 
     stages {
         stage('Cleanup') {
@@ -38,12 +39,18 @@ pipeline {
                 }
             }
         }
-
-        stage('Check The Service') {
+        stage('Verify Deployment') {
             steps {
-                echo 'Running Post-Deployment Tests...'
-            
+                script {
+                    // Sleep for 10 seconds before checking the service
+                    sleep(time: 10, unit: 'SECONDS')
+                    def response = sh(script: "curl -f http://${params.EXTERNAL_IP}:80/ || echo 'Service not ready'", returnStdout: true).trim()
+                    if (response.contains('Service not ready')) {
+                        error("Service is not up and running")
+                    }
+                }
             }
         }
+
     }
 }
